@@ -1,31 +1,37 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using Method = RestSharp.Method;
 
 namespace ApiFunction.Product
+
 {
+ 
     public class ProductApi
     {
 
         private readonly RestClient Client;
         private readonly IHttpContextAccessor httpContextAccessor;
 
-        public ProductApi(IHttpContextAccessor _httpContextAccessor)
+        public ProductApi()
         {
-            Client = new RestClient(Vars.ApiAddress);
-            httpContextAccessor = _httpContextAccessor;
+            Client = new RestClient();
+            //httpContextAccessor = _httpContextAccessor;
         }
 
-        public void GetAllCountries()
+        public async Task<List<ProductViewModel>> GetAllCountries()
         {
             var request = new RestRequest();
-            request.Resource = "northwind.now.sh/api/categories";
+            request.Resource = "http://northwind.now.sh/api/categories";
             //request.AddHeader("Authorization", httpContextAccessor.HttpContext.Session.Get<string>("Token"));
-            var response = Client.ExecuteAsync(request);
-            //return response;
+            var response = await Client.ExecuteAsync(request);
+            return JsonConvert.DeserializeObject<List<ProductViewModel>>(response.Content);
+
         }
     }
 }

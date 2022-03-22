@@ -1,3 +1,5 @@
+using ApiFunction.Product;
+using Entities.Concrete;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -8,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace projectApi
 {
@@ -23,7 +26,9 @@ namespace projectApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ProductApi>();
             services.AddRazorPages();
+            // services.AddTransient<Product>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,10 +52,19 @@ namespace projectApi
 
             app.UseAuthorization();
 
+            ////app.UseEndpoints(endpoints =>
+            ////{
+            ////    endpoints.MapRazorPages();
+            ////});
+
+
+
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+               name: "default",
+               pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
-}
+} 
